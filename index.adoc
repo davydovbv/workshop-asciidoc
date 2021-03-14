@@ -1,0 +1,11 @@
+= Git
+:source-highlighter: prettify
+:sectnums:
+:toc: left
+:toclevels: 2
+
+:toc!:
+
+Wiki for Git.
+
+include::dir-example/example.adoc[leveloffset=1]
