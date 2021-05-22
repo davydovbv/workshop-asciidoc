@@ -443,6 +443,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_documenting_the_project">1. Documenting the project</a></li>
+<li><a href="#_руководство_по_maven_плагины">2. Руководство по Maven. Плагины.</a>
+<ul class="sectlevel2">
+<li><a href="#_типы_плагинов">2.1. Типы плагинов</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -527,10 +532,225 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_руководство_по_maven_плагины">2. Руководство по Maven. Плагины.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Если говорить в целом, то <strong>Maven</strong> – это фреймворк, который выполняет плагины. В этом фреймворке каждая задача, по сути своей, выполняется с помощью <strong>плагинов</strong>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Плагины</strong> <strong>Maven</strong> используются для:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>создания jar – файла</strong></p>
+</li>
+<li>
+<p><strong>создания war – файла</strong></p>
+</li>
+<li>
+<p><strong>компиляции кода файлов</strong></p>
+</li>
+<li>
+<p><strong>юнит-тестирования кода</strong></p>
+</li>
+<li>
+<p><strong>создание отчётов проекта</strong></p>
+</li>
+<li>
+<p><strong>создание документации проекта</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>В общей форме, <strong>плагин</strong> обеспечивает набор целей, которые могут быть выполнены с помощью такого синтаксиса:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn [имя-плагина]:[имя-цели]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Например, для того, чтобы выполнить компиляцию проекта, необходимо использовать следующую команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn compiler:compile</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_типы_плагинов">2.1. Типы плагинов</h3>
+<div class="paragraph">
+<p>Существует два типа плагинов в Maven:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Плагины сборки</strong><br>
+Выполняются в процессе сборки и должны быть конфигурированы внутри блока <code>&lt;build&gt;&lt;/build&gt;</code> файла <code>pom.xml</code></p>
+</li>
+<li>
+<p><strong>Плагины отчётов</strong><br>
+Выполняются в процесса генерирования сайта и должны быть конфигурированы внутри блока <code>&lt;reporting&gt;&lt;/reporting&gt;</code> файла <code>pom.xml</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Вот список, наиболее используемых плагинов:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>clean</strong><br>
+Очищает цель после сборки. Удаляет директорию <code>target</code>.</p>
+</li>
+<li>
+<p><strong>compiler</strong><br>
+Компилирует исходные <strong>Java</strong> файлы.</p>
+</li>
+<li>
+<p><strong>surefire</strong><br>
+Запускает тесты <strong>JUnit</strong>. Создаёт отчёты о тестировании.</p>
+</li>
+<li>
+<p><strong>jar</strong><br>
+Собирает <strong>JAR</strong> файл текущего проекта.</p>
+</li>
+<li>
+<p><strong>war</strong><br>
+Собирает <strong>WAR</strong> файл текущего проекта.</p>
+</li>
+<li>
+<p><strong>javadoc</strong><br>
+Генерирует <strong>Javadoc</strong> проекта.</p>
+</li>
+<li>
+<p><strong>antrun</strong><br>
+Запускает набор задач <strong>ant</strong> из любой указанной фазы.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Для понимания того, как это работает на практике, рассмотрим следующий пример:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;ProselyteTutorials&lt;/groupId&gt;
+    &lt;artifactId&gt;MavenTutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;test&lt;/id&gt;
+            &lt;activation&gt;
+                &lt;file&gt;
+                    &lt;missing&gt;target/generated-sources/some/dir/net/proselyte/maven&lt;/missing&gt;
+                &lt;/file&gt;
+            &lt;/activation&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.1&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;id.clean&lt;/id&gt;
+                        &lt;phase&gt;compile&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;run&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;tasks&gt;
+                                &lt;echo&gt;compile phase&lt;/echo&gt;
+                            &lt;/tasks&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>После этого выполним в терминале следующую команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn compile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В результате выполнения команды, получим, примерно, следующий результат:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-antrun-plugin:1.1:run (id.clean) @ MavenTutorial ---
+[INFO] Executing tasks
+[echo] compile phase
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.620s
+[INFO] Finished at: Wed Apr 27 16:21:41 EEST 2016
+[INFO] Final Memory: 6M/150M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Пример, приведённый выше, демонстрирует следующие ключевые концепции:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Плагины указываются в файле <code>pom.xml</code> внутри блока <code>&lt;plugins&gt;&lt;/plugins&gt;</code>.</p>
+</li>
+<li>
+<p>Каждый плагин может иметь несколько целей.</p>
+</li>
+<li>
+<p>Можно определять фазу, из которой можно начать выполнение плагина. В примере выше использовалась фаза <strong>compile</strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-12 17:30:25 UTC
+Last updated 2021-05-22 10:19:24 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
