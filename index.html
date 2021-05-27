@@ -460,6 +460,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_типы_плагинов">4.1. Типы плагинов</a></li>
 </ul>
 </li>
+<li><a href="#_snapshots">5. Snapshots</a>
+<ul class="sectlevel2">
+<li><a href="#_snapshot">5.1. Snapshot</a></li>
+<li><a href="#_snapshot_и_версия">5.2. Snapshot и Версия</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -992,10 +998,118 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_snapshots">5. Snapshots</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Любое большое приложение состоит из нескольких модулей и, чаще всего над каждым модулем программы работает отдельная команда.
+Например, одна команда работает над бизнес логикой приложения и они используют проект <strong>business-logic</strong> (<code>business-logic.jar.1.0</code>), а другая команда работает на внешним видом приложения и разрабатывает проект <strong>app-front-end</strong> (<code>app-front-end.jar:1.0</code>).</p>
+</div>
+<div class="paragraph">
+<p>В этом случае может случиться такая ситуация, при которой команда, которая работает над бизнес-логикой, выпускает обновления каждую неделю и выкладывает их на удалённый репозиторий.</p>
+</div>
+<div class="paragraph">
+<p>Таким образом, если эта команда часто выкладывает обновления, то можем произойти следующее:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>комнада бизнес логики должна уведомлять команду, разрабатывающую <strong>front-end</strong>, когда именно они будут выкладывать обновления;</p>
+</li>
+<li>
+<p>команда <strong>front-end</strong> должна обновлять свой файл <code>pom.xml</code> для того, чтобы иметь текущую версию продукта.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Для того, что исправить эту ситуацию используется концепция <strong>snapshot</strong>.</p>
+</div>
+<div class="sect2">
+<h3 id="_snapshot">5.1. Snapshot</h3>
+<div class="paragraph">
+<p><strong>Snapshot</strong> – это специальная версия, которая показывает текущую рабочую копию. При каждой сборке <strong>Maven</strong> проверяет наличие новой <strong>snapshot</strong> версии на удалённом репозитории.</p>
+</div>
+<div class="paragraph">
+<p>В этом случае, команда <strong>business-logic</strong> будет выпускать <strong>snapshot</strong> своего обновления на репозиторий в виде <code>business-logic:1.0-SNAPSHOT</code> замещая предыдущий <strong>jar файл</strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_snapshot_и_версия">5.2. Snapshot и Версия</h3>
+<div class="paragraph">
+<p>В случае с версией, если <strong>Maven</strong> однажды загрузил версию <strong>business-logic:1.0</strong>, то он больше не будет пытаться загрузить новую версию <strong>1.0</strong> из репозитория. Для того, чтобы скачать обновлённый продукт <strong>business-logic</strong> должен быть обновлён до версии <strong>1.1</strong>.</p>
+</div>
+<div class="paragraph">
+<p>В случае со <strong>snapshot</strong>, <strong>Maven</strong> автоматически будет подтягивать крайний <strong>snapshot</strong> (<code>business-logic:1.0-SNAPSHOT</code>) каждый раз, когда команда front-end будет выполнять сборку своего проекта.</p>
+</div>
+<div class="paragraph">
+<p>Вот как это выглядит в <code>pom.xml</code> файле:</p>
+</div>
+<div class="paragraph">
+<div class="title"><code>pom.xml</code> для <strong>front-end</strong></div>
+<p>[source, xml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;front-end&lt;/groupId&gt;
+    &lt;artifactId&gt;front-end&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;name&gt;maventutorial&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+        &lt;groupId&gt;data-service&lt;/groupId&gt;
+            &lt;artifactId&gt;business-logic&lt;/artifactId&gt;
+            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><code>pom.xml</code> для <strong>business-logic</strong></div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;business-logic&lt;/groupId&gt;
+    &lt;artifactId&gt;business-logic&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;name&gt;maven-tutorial&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+    &lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Для того чтобы подтянуть крайний snapshot необходимо использовать <code>-U</code> в каждой команде.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn clean package -U</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-27 17:14:56 UTC
+Last updated 2021-05-27 17:28:16 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
