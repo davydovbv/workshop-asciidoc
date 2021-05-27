@@ -442,15 +442,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_шаблоны_проектов">1. Шаблоны проектов</a>
+<li><a href="#_введение">1. Введение</a>
 <ul class="sectlevel2">
-<li><a href="#_архитип">1.1. Архитип</a></li>
+<li><a href="#_основные_понятия">1.1. Основные понятия</a></li>
+<li><a href="#_основная_цель">1.2. Основная цель</a></li>
+<li><a href="#_соглашение_по_конфигурации">1.3. Соглашение по конфигурации</a></li>
 </ul>
 </li>
-<li><a href="#_documenting_the_project">2. Documenting the project</a></li>
-<li><a href="#_руководство_по_maven_плагины">3. Руководство по Maven. Плагины.</a>
+<li><a href="#_шаблоны_проектов">2. Шаблоны проектов</a>
 <ul class="sectlevel2">
-<li><a href="#_типы_плагинов">3.1. Типы плагинов</a></li>
+<li><a href="#_архитип">2.1. Архитип</a></li>
+</ul>
+</li>
+<li><a href="#_documenting_the_project">3. Documenting the project</a></li>
+<li><a href="#_руководство_по_maven_плагины">4. Руководство по Maven. Плагины.</a>
+<ul class="sectlevel2">
+<li><a href="#_типы_плагинов">4.1. Типы плагинов</a></li>
 </ul>
 </li>
 </ul>
@@ -465,18 +472,124 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_шаблоны_проектов">1. Шаблоны проектов</h2>
+<h2 id="_введение">1. Введение</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_основные_понятия">1.1. Основные понятия</h3>
+<div class="paragraph">
+<p><strong>Maven</strong> – это средство для управления и сборки проектов. Он позволяет разработчикам полностью управлять <strong>жизненным циклом</strong> проекта. Благодаря этому, команда может автоматизировать процессы, связанные со сборкой, тестированием, упаковкой проекта
+и т.д.</p>
+</div>
+<div class="paragraph">
+<p>В случае, когда над проектом работает несколько команд разработчиков, <strong>Maven</strong> позволяет работать в соответствии с определенными стандартами.</p>
+</div>
+<div class="paragraph">
+<p>Основные аспекты, которыми позволяет управлять <strong>Maven</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Создание</p>
+</li>
+<li>
+<p>Документирование</p>
+</li>
+<li>
+<p>Отчёты</p>
+</li>
+<li>
+<p>Зависимости</p>
+</li>
+<li>
+<p>Релизы</p>
+</li>
+<li>
+<p>SCM</p>
+</li>
+<li>
+<p>Список рассылки</p>
+</li>
+<li>
+<p>Дистрибьюция</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_основная_цель">1.2. Основная цель</h3>
+<div class="paragraph">
+<p>Основной целью <strong>Maven</strong> является предоставление разработчику:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Понятной модели для проектов, которая может быть использована повторно и была бы проста в поддержании.</p>
+</li>
+<li>
+<p>Плагины, которые могут взаимодействовать с этой моделью.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Структура и содержание проекта <strong>Maven</strong> указывается в специальном xml-файле, который называется <strong>Project Object Model</strong> (<strong>POM</strong>), который является базовым модулем всей системы.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_соглашение_по_конфигурации">1.3. Соглашение по конфигурации</h3>
+<div class="paragraph">
+<p>Разработчики не обязаны указывать каждую деталь. <strong>Maven</strong> обеспечивает поведение проекта по умолчанию. Когда мы создаём проект с использованием этой технологии, то <strong>Maven</strong> создаёт базовую структуру проекта. Разработчики несут ответственность только за соответственное размещение файлов.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Значения по умолчанию для исходного кода проекта и других модулей.</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Исходный код</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/src/main/java</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Ресурсы</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/src/main/resources</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Тесты</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/src/test</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Дистрибутив JAR</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/target</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Скомпилированный байт-код</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/target/classes</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Для того, чтобы построить проект, <strong>Maven</strong> предоставляет настройки для управления жизненным циклом проекта и его зависимостями. Большая часть его задач поддерживается <strong>плагинами Maven</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Можно создавать проекты с использованием <strong>Maven</strong> без понимания того, как работают эти отдельные плагины.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_шаблоны_проектов">2. Шаблоны проектов</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Wiki for Maven</p>
 </div>
 <div class="sect2">
-<h3 id="_архитип">1.1. Архитип</h3>
+<h3 id="_архитип">2.1. Архитип</h3>
 <div class="paragraph">
 <p><strong>Архитип</strong> – это плагин <strong>Maven</strong>, задача которого состоит в создании структуры проекта по определённому шаблону. Рассмотрим архитип <code>quickstart</code> и создадим с его помощью java-приложение.</p>
 </div>
 <div class="sect3">
-<h4 id="_создание_приложения">1.1.1. Создание приложения</h4>
+<h4 id="_создание_приложения">2.1.1. Создание приложения</h4>
 <div class="paragraph">
 <p>Переходим в нужную директорию и выполняем в терминале следующую команду:</p>
 </div>
@@ -592,7 +705,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_documenting_the_project">2. Documenting the project</h2>
+<h2 id="_documenting_the_project">3. Documenting the project</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Чтобы создать документацию проекта, необходимо перейти в директорию нашего проекта и выполнить в терминале следующую команду:</p>
@@ -665,7 +778,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_руководство_по_maven_плагины">3. Руководство по Maven. Плагины.</h2>
+<h2 id="_руководство_по_maven_плагины">4. Руководство по Maven. Плагины.</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Если говорить в целом, то <strong>Maven</strong> – это фреймворк, который выполняет плагины. В этом фреймворке каждая задача, по сути своей, выполняется с помощью <strong>плагинов</strong>.</p>
@@ -712,7 +825,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 <div class="sect2">
-<h3 id="_типы_плагинов">3.1. Типы плагинов</h3>
+<h3 id="_типы_плагинов">4.1. Типы плагинов</h3>
 <div class="paragraph">
 <p>Существует два типа плагинов в Maven:</p>
 </div>
@@ -882,7 +995,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-24 15:57:26 UTC
+Last updated 2021-05-27 17:13:26 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
