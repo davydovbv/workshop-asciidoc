@@ -1,4 +1,5 @@
 = Веб-проект с использованием Maven
+:imagesdir: ../assets/img/maven
 
 == Создание проекта
 
