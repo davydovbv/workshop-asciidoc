@@ -449,22 +449,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_соглашение_по_конфигурации">1.3. Соглашение по конфигурации</a></li>
 </ul>
 </li>
-<li><a href="#_плагины">2. Плагины</a>
+<li><a href="#_профиль_сборки">2. Профиль сборки</a>
 <ul class="sectlevel2">
-<li><a href="#_типы_плагинов">2.1. Типы плагинов</a></li>
+<li><a href="#_типы_профилей_сборки">2.1. Типы профилей сборки</a></li>
+<li><a href="#_активация_профиля">2.2. Активация профиля</a></li>
+<li><a href="#_явная_активация_профиля_команда_в_консоли">2.3. Явная активация профиля (команда в консоли)</a></li>
+<li><a href="#_активация_профиля_с_помощью_настроек_maven">2.4. Активация профиля с помощью настроек Maven</a></li>
+<li><a href="#_активация_профиля_с_помощью_переменных_окружения">2.5. Активация профиля с помощью переменных окружения</a></li>
+<li><a href="#_активация_профиля_с_помощью_ос">2.6. Активация профиля с помощью ОС</a></li>
+<li><a href="#_активация_с_помощью_присутствующих_или_отсутствующих_файлов">2.7. Активация с помощью присутствующих или отсутствующих файлов</a></li>
 </ul>
 </li>
-<li><a href="#_создание_проекта">3. Создание проекта.</a></li>
-<li><a href="#_documenting_the_project">4. Documenting the project</a></li>
-<li><a href="#_шаблоны_проектов">5. Шаблоны проектов</a>
+<li><a href="#_плагины">3. Плагины</a>
 <ul class="sectlevel2">
-<li><a href="#_архитип">5.1. Архитип</a></li>
+<li><a href="#_типы_плагинов">3.1. Типы плагинов</a></li>
 </ul>
 </li>
-<li><a href="#_snapshots">6. Snapshots</a>
+<li><a href="#_создание_проекта">4. Создание проекта.</a></li>
+<li><a href="#_documenting_the_project">5. Documenting the project</a></li>
+<li><a href="#_шаблоны_проектов">6. Шаблоны проектов</a>
 <ul class="sectlevel2">
-<li><a href="#_snapshot">6.1. Snapshot</a></li>
-<li><a href="#_snapshot_и_версия">6.2. Snapshot и Версия</a></li>
+<li><a href="#_архитип">6.1. Архитип</a></li>
+</ul>
+</li>
+<li><a href="#_snapshots">7. Snapshots</a>
+<ul class="sectlevel2">
+<li><a href="#_snapshot">7.1. Snapshot</a></li>
+<li><a href="#_snapshot_и_версия">7.2. Snapshot и Версия</a></li>
 </ul>
 </li>
 </ul>
@@ -585,7 +596,639 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_плагины">2. Плагины</h2>
+<h2 id="_профиль_сборки">2. Профиль сборки</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Профиль сборки</strong> – это множество настроек, которые могут быть использованы для установки или перезаписи стандартных значений сборки Maven. Используя <strong>профиль сборки</strong> <strong>Maven</strong>, можно настраивать сборку для различных окружений, таких как <strong>Разработка</strong> или <strong>Продакшн</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Профили настраиваются в файле <code>pom.xml</code> с помощью элементов <code>activeProfiles</code>/<code>profiles</code> и запускаются различными методами. Профили изменяют файл <code>pom.xml</code> во время сборки и используются для передачи параметров различным целевым окружениям, например, в директорию сервера базы данных в продакшн, разработку и тестирования.</p>
+</div>
+<div class="sect2">
+<h3 id="_типы_профилей_сборки">2.1. Типы профилей сборки</h3>
+<div class="paragraph">
+<p>В Maven существует три основных типа профилей сборки:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Тип</th>
+<th class="tableblock halign-left valign-top">Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per Project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Определяется в POM файле, <code>pom.xml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Определяется в настройках Maven – xml файл (<code>%USER_HOME%/.m2/settings.xml</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Определяется в глобальных настройках – xml файл (<code>%M2_HOME%/conf/settings.xml</code>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_активация_профиля">2.2. Активация профиля</h3>
+<div class="paragraph">
+<p>Профиль сборки Maven может быть активирован различными способами:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Использованием команды в консоли</p>
+</li>
+<li>
+<p>С помощью настроек Maven</p>
+</li>
+<li>
+<p>С помощью переменных окружения</p>
+</li>
+<li>
+<p>Настройках ОС</p>
+</li>
+<li>
+<p>Существующими, отсутствующими файлами.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Для понимания того, как это работает на практике, рассмотрим следующий пример:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../assets/img/maven/maven-tutorial-structure.webp" alt="Структура проекта">
+</div>
+<div class="title">Figure 1. Структура проекта</div>
+</div>
+<div class="paragraph">
+<p>В папке <code>scr/main/resources</code> находятся файлы для настройки трёх различных окружений:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Имя файла</th>
+<th class="tableblock halign-left valign-top">Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>environment.production.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Конфигурация продакшн. Когда используется профиль <code>production</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>environment.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Стандартная конфигурация. Используется по умолчанию.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>environment.test.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Тестовая конфигурация. Когда используется профиль <code>test</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_явная_активация_профиля_команда_в_консоли">2.3. Явная активация профиля (команда в консоли)</h3>
+<div class="paragraph">
+<p>В примере, приведённом ниже будет прикреплена задача <code>maven-antrun-plugin:run</code> к фазе <code>test</code>. Это позволит получать текстовые сообщения для различных профилей. Используя файл <code>pom.xml</code> для определения различных профилей и активации различные профили с помощью команд в консоли.</p>
+</div>
+<div class="paragraph">
+<p>Пример:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;net.proselyte.maventutorial&lt;/groupId&gt;
+    &lt;artifactId&gt;MavenTutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;test&lt;/id&gt;
+            &lt;build&gt;
+                &lt;plugins&gt;
+                    &lt;plugin&gt;
+                        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                        &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                        &lt;version&gt;1.1&lt;/version&gt;
+                        &lt;executions&gt;
+                            &lt;execution&gt;
+                                &lt;phase&gt;test&lt;/phase&gt;
+                                &lt;goals&gt;
+                                    &lt;goal&gt;run&lt;/goal&gt;
+                                &lt;/goals&gt;
+                                &lt;configuration&gt;
+                                    &lt;tasks&gt;
+                                        &lt;echo&gt;Using environment.test.properties&lt;/echo&gt;
+                                        &lt;copy file="src/main/resources/environment.test.properties" tofile
+                                                ="${project.build.outputDirectory}/environment.properties"/&gt;
+                                    &lt;/tasks&gt;
+                                &lt;/configuration&gt;
+                            &lt;/execution&gt;
+                        &lt;/executions&gt;
+                    &lt;/plugin&gt;
+                &lt;/plugins&gt;
+            &lt;/build&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Файлы:</p>
+</div>
+<div class="listingblock">
+<div class="title">environment.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="properties">environment=debug</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">environment.test.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="properties">environment=test</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">environment.production.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="properties">environment=production</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Выполним следующую команду в терминале:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test -Ptest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В результате получится, примерно, следующий результат:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:testResources (default-testResources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:testCompile (default-testCompile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ MavenTutorial ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] --- maven-antrun-plugin:1.1:run (default) @ MavenTutorial ---
+[INFO] Executing tasks
+[echo] Using environment.test.properties
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.163s
+[INFO] Finished at: Sun Mar 27 23:55:31 EEST 2016
+[INFO] Final Memory: 9M/212M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Можно изменить путь к файлу и использовать такие команды:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test -Pnormal</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test -Pprod</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_активация_профиля_с_помощью_настроек_maven">2.4. Активация профиля с помощью настроек Maven</h3>
+<div class="paragraph">
+<p>Для начала нам необходимо открыть файл <code>settings.xml</code>, который находится в директории <code>%USER_HOME%/.m2</code>.</p>
+</div>
+<div class="paragraph">
+<p>Если файла там нет – его необходимо создать.</p>
+</div>
+<div class="paragraph">
+<p>Активация тестового профиля с помощью элемента <code>activeProfile</code>, как показано в примере ниже:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;settings xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
+    &lt;mirrors&gt;
+        &lt;mirror&gt;
+            &lt;id&gt;maven.dev.snaponglobal.com&lt;/id&gt;
+            &lt;name&gt;Internal Artifactory Maven repository&lt;/name&gt;
+            &lt;url&gt;http://repo1.maven.org/maven2/&lt;/url&gt;
+            &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+        &lt;/mirror&gt;
+    &lt;/mirrors&gt;
+    &lt;activeProfiles&gt;
+        &lt;activeProfile&gt;test&lt;/activeProfile&gt;
+    &lt;/activeProfiles&gt;
+&lt;/settings&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Теперь выполним команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:testResources (default-testResources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:testCompile (default-testCompile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ MavenTutorial ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.089s
+[INFO] Finished at: Mon Mar 28 00:07:04 EEST 2016
+[INFO] Final Memory: 7M/150M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_активация_профиля_с_помощью_переменных_окружения">2.5. Активация профиля с помощью переменных окружения</h3>
+<div class="paragraph">
+<p>Необходимо удалить файл settings.xml, и изменить профиль <code>test</code> в файле <code>pom.xml</code>. Добавить элемент <code>activation</code>.</p>
+</div>
+<div class="paragraph">
+<p>Профиль <code>test</code> запустит системное свойство <code>environment</code>, которое определенно, как значение <code>test</code>.</p>
+</div>
+<div class="paragraph">
+<p>Пример:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;ProselyteTutorials&lt;/groupId&gt;
+    &lt;artifactId&gt;MavenTutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;test&lt;/id&gt;
+            &lt;activation&gt;
+                &lt;property&gt;
+                    &lt;name&gt;environment&lt;/name&gt;
+                    &lt;value&gt;test&lt;/value&gt;
+                &lt;/property&gt;
+            &lt;/activation&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Теперь выполним команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В результате будет получен, примерно, следующий результат:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:testResources (default-testResources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:testCompile (default-testCompile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ MavenTutorial ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.234s
+[INFO] Finished at: Mon Mar 28 00:14:57 EEST 2016
+[INFO] Final Memory: 8M/212M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_активация_профиля_с_помощью_ос">2.6. Активация профиля с помощью ОС</h3>
+<div class="paragraph">
+<p>Для активации профиля с помощью ОС необходимо изменить тип активации в файле <code>pom.xml</code> на следующий:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;ProselyteTutorials&lt;/groupId&gt;
+    &lt;artifactId&gt;MavenTutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;test&lt;/id&gt;
+            &lt;activation&gt;
+                &lt;os&gt;
+                    &lt;name&gt;Ubuntu&lt;/name&gt;
+                    &lt;family&gt;Linux&lt;/family&gt;
+                    &lt;arch&gt;x64&lt;/arch&gt;
+                    &lt;version&gt;14.044 LTS&lt;/version&gt;
+                &lt;/os&gt;
+            &lt;/activation&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Выполнить команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В результате будет получен, примерно, следующий результат:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:testResources (default-testResources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:testCompile (default-testCompile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ MavenTutorial ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.097s
+[INFO] Finished at: Mon Mar 28 00:21:13 EEST 2016
+[INFO] Final Memory: 7M/150M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_активация_с_помощью_присутствующих_или_отсутствующих_файлов">2.7. Активация с помощью присутствующих или отсутствующих файлов</h3>
+<div class="paragraph">
+<p>В примере, приведённом ниже, активация профиля произойдёт в случае отсутствия <code>target/generated-sources/some/dir/net/proselyte/maven</code></p>
+</div>
+<div class="paragraph">
+<p>Пример:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;ProselyteTutorials&lt;/groupId&gt;
+    &lt;artifactId&gt;MavenTutorial&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;test&lt;/id&gt;
+            &lt;activation&gt;
+                &lt;file&gt;
+                    &lt;missing&gt;target/generated-sources/some/dir/net/proselyte/maven&lt;/missing&gt;
+                &lt;/file&gt;
+            &lt;/activation&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Выполнить команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell script">mvn test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В результате будет получен, примерно, следующий результат:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building MavenTutorial 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:resources (default-resources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:compile (default-compile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-resources-plugin:2.3:testResources (default-testResources) @ MavenTutorial ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:2.0.2:testCompile (default-testCompile) @ MavenTutorial ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ MavenTutorial ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/proselyte/Programming/Projects/Proselyte/MavenTutorial/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.090s
+[INFO] Finished at: Mon Mar 28 00:23:45 EEST 2016
+[INFO] Final Memory: 8M/212M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_плагины">3. Плагины</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Если говорить в целом, то <strong>Maven</strong> – это фреймворк, который выполняет плагины. В этом фреймворке каждая задача, по сути своей, выполняется с помощью <strong>плагинов</strong>.</p>
@@ -632,7 +1275,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_типы_плагинов">2.1. Типы плагинов</h3>
+<h3 id="_типы_плагинов">3.1. Типы плагинов</h3>
 <div class="paragraph">
 <p>Существует два типа плагинов в Maven:</p>
 </div>
@@ -800,7 +1443,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_создание_проекта">3. Создание проекта.</h2>
+<h2 id="_создание_проекта">4. Создание проекта.</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Для создания проекта, <strong>Maven</strong> использует <strong>архитипы</strong>. Для создания простого Java приложения, будет использоваться плагин <code>mvn-archetype-quickstart</code>. В примере, приведённом ниже, будет создано Java приложение с использованием Maven в директории <code>/home/proselyte/Programming/Projects/Proselyte/MavenSimpleProject</code>.</p>
@@ -909,7 +1552,7 @@ public class AppTest extends TestCase {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_documenting_the_project">4. Documenting the project</h2>
+<h2 id="_documenting_the_project">5. Documenting the project</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Чтобы создать документацию проекта, необходимо перейти в директорию нашего проекта и выполнить в терминале следующую команду:</p>
@@ -982,18 +1625,18 @@ public class AppTest extends TestCase {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_шаблоны_проектов">5. Шаблоны проектов</h2>
+<h2 id="_шаблоны_проектов">6. Шаблоны проектов</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Wiki for Maven</p>
 </div>
 <div class="sect2">
-<h3 id="_архитип">5.1. Архитип</h3>
+<h3 id="_архитип">6.1. Архитип</h3>
 <div class="paragraph">
 <p><strong>Архитип</strong> – это плагин <strong>Maven</strong>, задача которого состоит в создании структуры проекта по определённому шаблону. Рассмотрим архитип <code>quickstart</code> и создадим с его помощью java-приложение.</p>
 </div>
 <div class="sect3">
-<h4 id="_создание_приложения">5.1.1. Создание приложения</h4>
+<h4 id="_создание_приложения">6.1.1. Создание приложения</h4>
 <div class="paragraph">
 <p>Переходим в нужную директорию и выполняем в терминале следующую команду:</p>
 </div>
@@ -1109,7 +1752,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_snapshots">6. Snapshots</h2>
+<h2 id="_snapshots">7. Snapshots</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Любое большое приложение состоит из нескольких модулей и, чаще всего над каждым модулем программы работает отдельная команда.
@@ -1135,7 +1778,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 <p>Для того, что исправить эту ситуацию используется концепция <strong>snapshot</strong>.</p>
 </div>
 <div class="sect2">
-<h3 id="_snapshot">6.1. Snapshot</h3>
+<h3 id="_snapshot">7.1. Snapshot</h3>
 <div class="paragraph">
 <p><strong>Snapshot</strong> – это специальная версия, которая показывает текущую рабочую копию. При каждой сборке <strong>Maven</strong> проверяет наличие новой <strong>snapshot</strong> версии на удалённом репозитории.</p>
 </div>
@@ -1144,7 +1787,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 </div>
 <div class="sect2">
-<h3 id="_snapshot_и_версия">6.2. Snapshot и Версия</h3>
+<h3 id="_snapshot_и_версия">7.2. Snapshot и Версия</h3>
 <div class="paragraph">
 <p>В случае с версией, если <strong>Maven</strong> однажды загрузил версию <strong>business-logic:1.0</strong>, то он больше не будет пытаться загрузить новую версию <strong>1.0</strong> из репозитория. Для того, чтобы скачать обновлённый продукт <strong>business-logic</strong> должен быть обновлён до версии <strong>1.1</strong>.</p>
 </div>
@@ -1216,7 +1859,7 @@ Define value for property 'package':  Tutorials: : net.proselyte.mavenproject</p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-30 04:47:22 UTC
+Last updated 2021-05-30 06:04:58 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
